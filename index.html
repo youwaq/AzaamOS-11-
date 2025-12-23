@@ -2,50 +2,20 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Azaam OS 10</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             overflow: hidden;
-            background: #000;
+            background: #0078d4;
             height: 100vh;
-            cursor: none;
-        }
-
-        /* Custom Cursor */
-        #custom-cursor {
-            position: fixed;
-            width: 0;
-            height: 0;
-            border-left: 14px solid white;
-            border-top: 10px solid transparent;
-            border-bottom: 10px solid transparent;
-            pointer-events: none;
-            z-index: 99999;
-            filter: drop-shadow(0 0 4px rgba(0,0,0,0.8));
-            transition: transform 0.05s ease;
-        }
-
-        #custom-cursor.loading {
-            border: 3px solid rgba(255,255,255,0.3);
-            border-top: 3px solid white;
-            border-left: 0;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
         }
 
         .screen {
@@ -58,7 +28,9 @@
             z-index: 10000;
         }
 
-        .screen.active { display: flex; }
+        .screen.active {
+            display: flex !important;
+        }
 
         /* Boot Screen */
         #boot-screen {
@@ -68,26 +40,18 @@
             justify-content: center;
         }
 
-        .boot-logo {
-            width: 100px;
-            height: 100px;
-            background: #0078d4;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .windows-logo {
+            width: 88px;
+            height: 88px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 8px;
             margin-bottom: 30px;
-            animation: pulse 2s infinite;
         }
 
-        .boot-logo-text {
-            color: white;
-            font-size: 50px;
-            font-weight: 300;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+        .windows-logo div {
+            background: white;
         }
 
         .boot-loading {
@@ -123,26 +87,6 @@
             max-width: 700px;
             width: 90%;
             text-align: center;
-            animation: fadeIn 0.5s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .windows-logo {
-            width: 88px;
-            height: 88px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            grid-template-rows: 1fr 1fr;
-            gap: 8px;
-            margin: 0 auto 30px;
-        }
-
-        .windows-logo div {
-            background: white;
         }
 
         .setup-title {
@@ -168,7 +112,6 @@
         .setup-option {
             padding: 30px 20px;
             background: rgba(255,255,255,0.15);
-            backdrop-filter: blur(20px);
             border: 2px solid rgba(255,255,255,0.3);
             border-radius: 8px;
             cursor: pointer;
@@ -178,7 +121,6 @@
 
         .setup-option:hover {
             background: rgba(255,255,255,0.25);
-            border-color: rgba(255,255,255,0.5);
             transform: translateY(-5px);
         }
 
@@ -202,7 +144,6 @@
             max-width: 400px;
             padding: 18px;
             background: rgba(255,255,255,0.2);
-            backdrop-filter: blur(20px);
             border: 2px solid rgba(255,255,255,0.3);
             border-radius: 4px;
             color: white;
@@ -215,12 +156,6 @@
             color: rgba(255,255,255,0.7);
         }
 
-        .setup-input:focus {
-            outline: none;
-            border-color: white;
-            background: rgba(255,255,255,0.25);
-        }
-
         .setup-button {
             padding: 16px 50px;
             background: white;
@@ -230,16 +165,6 @@
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .setup-button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 20px rgba(255,255,255,0.3);
-        }
-
-        .setup-button:active {
-            transform: scale(0.98);
         }
 
         .setup-checkbox-group {
@@ -255,7 +180,6 @@
         .setup-checkbox-group input {
             width: 22px;
             height: 22px;
-            cursor: pointer;
         }
 
         .setup-progress {
@@ -264,207 +188,18 @@
             font-size: 14px;
         }
 
-        /* Installing Screen */
-        .installing-screen {
-            background: #0078d4;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .installing-logo {
-            margin-bottom: 40px;
-        }
-
-        .installing-text {
-            color: white;
-            font-size: 32px;
-            font-weight: 300;
-            margin-bottom: 15px;
-        }
-
-        .installing-status {
-            color: rgba(255,255,255,0.8);
-            font-size: 18px;
-            margin-bottom: 30px;
-        }
-
-        .installing-progress {
-            width: 320px;
-            height: 4px;
-            background: rgba(255,255,255,0.3);
-            border-radius: 2px;
-            overflow: hidden;
-            margin-bottom: 20px;
-        }
-
-        .installing-progress-bar {
-            height: 100%;
-            background: white;
-            border-radius: 2px;
-            width: 0%;
-        }
-
-        .installing-percentage {
-            color: white;
-            font-size: 24px;
-            font-weight: 300;
-        }
-
-        /* Login Screen */
-        #login-screen {
-            background: linear-gradient(135deg, #0078d4 0%, #0053a0 100%);
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .login-container {
-            text-align: center;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .login-avatar {
-            width: 130px;
-            height: 130px;
-            background: rgba(255,255,255,0.25);
-            backdrop-filter: blur(20px);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 65px;
-            margin: 0 auto 25px;
-            border: 3px solid rgba(255,255,255,0.4);
-        }
-
-        .login-name {
-            color: white;
-            font-size: 36px;
-            font-weight: 300;
-            margin-bottom: 30px;
-            text-shadow: 2px 2px 6px rgba(0,0,0,0.4);
-        }
-
-        .login-input {
-            width: 340px;
-            max-width: 90vw;
-            padding: 16px 22px;
-            background: rgba(255,255,255,0.25);
-            backdrop-filter: blur(20px);
-            border: 2px solid rgba(255,255,255,0.4);
-            border-radius: 4px;
-            color: white;
-            font-size: 16px;
-            text-align: center;
-            margin-bottom: 22px;
-        }
-
-        .login-input::placeholder {
-            color: rgba(255,255,255,0.75);
-        }
-
-        .login-input:focus {
-            outline: none;
-            border-color: white;
-            background: rgba(255,255,255,0.3);
-        }
-
-        .login-button {
-            width: 60px;
-            height: 60px;
-            background: rgba(255,255,255,0.35);
-            backdrop-filter: blur(20px);
-            border: 2px solid rgba(255,255,255,0.5);
-            border-radius: 50%;
-            color: white;
-            font-size: 26px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .login-button:hover {
-            background: rgba(255,255,255,0.45);
-            transform: scale(1.05);
-        }
-
-        .login-button:active {
-            transform: scale(0.95);
-        }
-
-        .login-time {
-            position: absolute;
-            top: 40px;
-            left: 40px;
-            color: white;
-            text-shadow: 2px 2px 6px rgba(0,0,0,0.4);
-        }
-
-        .login-time-hour {
-            font-size: 72px;
-            font-weight: 200;
-        }
-
-        .login-time-date {
-            font-size: 20px;
-            opacity: 0.92;
-            margin-top: 6px;
-        }
-
-        /* Shutdown Screen */
-        #shutdown-screen {
-            background: #0078d4;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .shutdown-text {
-            color: white;
-            font-size: 32px;
-            font-weight: 300;
-            margin-bottom: 30px;
-        }
-
-        /* Welcome Screen */
-        #welcome-screen {
-            background: linear-gradient(135deg, #0078d4 0%, #0053a0 100%);
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .welcome-text {
-            color: white;
-            font-size: 48px;
-            font-weight: 300;
-            margin-bottom: 30px;
-            animation: fadeIn 1s ease;
-            text-align: center;
-            padding: 0 20px;
-        }
-
-        .welcome-spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid rgba(255,255,255,0.3);
-            border-top: 5px solid white;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
         /* Desktop */
         #desktop {
             height: calc(100vh - 40px);
             position: relative;
             background: linear-gradient(135deg, #0078d4 0%, #0053a0 100%);
-            background-size: cover;
             display: none;
         }
 
-        #desktop.active { display: block; }
+        #desktop.active {
+            display: block !important;
+        }
 
-        /* Watermark */
         .watermark {
             position: absolute;
             bottom: 60px;
@@ -472,7 +207,6 @@
             color: rgba(255,255,255,0.6);
             font-size: 14px;
             text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
-            pointer-events: none;
             line-height: 1.6;
         }
 
@@ -483,28 +217,20 @@
             cursor: pointer;
             padding: 12px;
             border-radius: 4px;
-            transition: all 0.2s;
-            user-select: none;
         }
 
         .icon:hover {
             background: rgba(255,255,255,0.12);
         }
 
-        .icon:active {
-            transform: scale(0.96);
-        }
-
         .icon-image {
             font-size: 44px;
             margin-bottom: 8px;
-            filter: drop-shadow(2px 2px 5px rgba(0,0,0,0.4));
         }
 
         .icon-label {
             color: white;
             font-size: 12px;
-            font-weight: 400;
             text-shadow: 2px 2px 5px rgba(0,0,0,0.8);
         }
 
@@ -521,13 +247,7 @@
         }
 
         .window.active {
-            display: flex;
-            animation: windowOpen 0.25s ease;
-        }
-
-        @keyframes windowOpen {
-            from { opacity: 0; transform: scale(0.97); }
-            to { opacity: 1; transform: scale(1); }
+            display: flex !important;
         }
 
         .title-bar {
@@ -539,7 +259,6 @@
             align-items: center;
             cursor: move;
             border-bottom: 1px solid #e0e0e0;
-            touch-action: none;
         }
 
         .title-bar-buttons {
@@ -555,7 +274,6 @@
             cursor: pointer;
             color: #333;
             font-size: 12px;
-            transition: all 0.2s;
         }
 
         .title-bar-buttons button:hover {
@@ -565,10 +283,6 @@
         .title-bar-buttons button:last-child:hover {
             background: #e81123;
             color: white;
-        }
-
-        .title-bar-buttons button:active {
-            transform: scale(0.95);
         }
 
         .window-content {
@@ -581,39 +295,18 @@
         #taskbar {
             height: 40px;
             background: rgba(0,0,0,0.7);
-            backdrop-filter: blur(20px);
             display: flex;
             align-items: center;
             padding: 0 8px;
             position: fixed;
             bottom: 0;
             width: 100%;
-            box-shadow: 0 -1px 3px rgba(0,0,0,0.2);
         }
 
         .taskbar-left {
             display: flex;
             gap: 4px;
             align-items: center;
-        }
-
-        .taskbar-icon {
-            width: 40px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .taskbar-icon:hover {
-            background: rgba(255,255,255,0.1);
-        }
-
-        .taskbar-icon:active {
-            transform: scale(0.92);
         }
 
         .start-button {
@@ -623,7 +316,6 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.2s;
         }
 
         .start-button:hover {
@@ -643,19 +335,18 @@
             background: white;
         }
 
-        .search-box {
-            margin-left: 4px;
-            padding: 6px 12px;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 2px;
-            color: white;
-            font-size: 13px;
-            width: 220px;
+        .taskbar-icon {
+            width: 40px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
         }
 
-        .search-box::placeholder {
-            color: rgba(255,255,255,0.6);
+        .taskbar-icon:hover {
+            background: rgba(255,255,255,0.1);
         }
 
         #clock {
@@ -664,29 +355,6 @@
             font-size: 12px;
             padding: 0 12px;
             text-align: center;
-        }
-
-        .system-tray {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            margin-right: 4px;
-        }
-
-        .system-icon {
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-            padding: 6px;
-            transition: all 0.2s;
-        }
-
-        .system-icon:hover {
-            background: rgba(255,255,255,0.1);
-        }
-
-        .system-icon:active {
-            transform: scale(0.9);
         }
 
         #start-menu {
@@ -698,21 +366,13 @@
             height: 620px;
             max-height: 85vh;
             background: rgba(20,20,20,0.92);
-            backdrop-filter: blur(40px);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
             display: none;
             flex-direction: column;
             padding: 20px;
         }
 
         #start-menu.active {
-            display: flex;
-            animation: startMenuSlide 0.25s ease;
-        }
-
-        @keyframes startMenuSlide {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
+            display: flex !important;
         }
 
         .start-user {
@@ -739,7 +399,6 @@
         .start-user-name {
             color: white;
             font-size: 15px;
-            font-weight: 500;
         }
 
         .start-apps {
@@ -751,8 +410,6 @@
             color: rgba(255,255,255,0.7);
             margin-bottom: 14px;
             font-size: 12px;
-            font-weight: 500;
-            letter-spacing: 0.5px;
         }
 
         .apps-list {
@@ -770,16 +427,11 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.2s;
             gap: 8px;
         }
 
         .app-item:hover {
             background: rgba(255,255,255,0.12);
-        }
-
-        .app-item:active {
-            transform: scale(0.96);
         }
 
         .app-item-icon {
@@ -805,60 +457,10 @@
             font-size: 18px;
             cursor: pointer;
             padding: 8px 12px;
-            transition: all 0.2s;
         }
 
         .power-btn:hover {
             background: rgba(255,255,255,0.1);
-        }
-
-        .power-btn:active {
-            transform: scale(0.92);
-        }
-
-        .settings-list {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-
-        .settings-item {
-            padding: 16px 20px;
-            background: white;
-            border-left: 4px solid transparent;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .settings-item:hover {
-            background: #f5f5f5;
-            border-left-color: #0078d4;
-        }
-
-        .settings-item:active {
-            transform: scale(0.99);
-        }
-
-        .settings-item-icon {
-            font-size: 28px;
-        }
-
-        .settings-item-content {
-            flex: 1;
-        }
-
-        .settings-item-title {
-            font-weight: 600;
-            margin-bottom: 4px;
-            font-size: 15px;
-        }
-
-        .settings-item-desc {
-            font-size: 13px;
-            color: #666;
         }
 
         textarea {
@@ -866,239 +468,279 @@
             height: 100%;
             border: none;
             padding: 14px;
-            font-family: 'Consolas', 'Courier New', monospace;
+            font-family: 'Consolas', monospace;
             resize: none;
             font-size: 13px;
-            line-height: 1.6;
         }
 
-        canvas {
-            border: 1px solid #ddd;
-            cursor: crosshair;
-            touch-action: none;
+        @media (max-width: 768px) {
+            .window {
+                min-width: 96vw;
+                top: 5vh !important;
+                left: 2vw !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Boot Screen -->
+    <div id="boot-screen" class="screen active">
+        <div class="windows-logo">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <div class="boot-loading">
+            <div class="boot-dot"></div>
+            <div class="boot-dot"></div>
+            <div class="boot-dot"></div>
+        </div>
+    </div>
+
+    <!-- Setup Language -->
+    <div id="setup-language" class="screen setup-screen">
+        <div class="setup-content">
+            <div class="windows-logo">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <div class="setup-title">مرحباً</div>
+            <div class="setup-subtitle">ابدأ بتحديد اللغة</div>
+            <div class="setup-options">
+                <div class="setup-option selected" onclick="selectOption(this)">
+                    <div class="setup-option-icon">🇸🇦</div>
+                    <div class="setup-option-label">العربية</div>
+                </div>
+                <div class="setup-option" onclick="selectOption(this)">
+                    <div class="setup-option-icon">🇬🇧</div>
+                    <div class="setup-option-label">English</div>
+                </div>
+            </div>
+            <button class="setup-button" onclick="nextStep('setup-user')">التالي</button>
+            <div class="setup-progress">الخطوة 1 من 2</div>
+        </div>
+    </div>
+
+    <!-- Setup User -->
+    <div id="setup-user" class="screen setup-screen">
+        <div class="setup-content">
+            <div class="windows-logo">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <div class="setup-title">إنشاء حساب</div>
+            <div class="setup-subtitle">أدخل اسمك</div>
+            <input type="text" id="username" class="setup-input" placeholder="اسم المستخدم">
+            <div class="setup-checkbox-group">
+                <input type="checkbox" id="use-password">
+                <label>إضافة كلمة مرور</label>
+            </div>
+            <input type="password" id="password" class="setup-input" placeholder="كلمة المرور" style="display:none;">
+            <button class="setup-button" onclick="finishSetup()">إنهاء</button>
+            <div class="setup-progress">الخطوة 2 من 2</div>
+        </div>
+    </div>
+
+    <!-- Desktop -->
+    <div id="desktop">
+        <div class="watermark">
+            Azaam OS 10 Pro<br>
+            Build 22H2.1000<br>
+            © 2025 Azaam
+        </div>
+
+        <div class="icon" style="top: 22px; right: 22px;" onclick="alert('المفكرة قريباً!')">
+            <div class="icon-image">📝</div>
+            <div class="icon-label">المفكرة</div>
+        </div>
+        <div class="icon" style="top: 122px; right: 22px;" onclick="alert('الملفات قريباً!')">
+            <div class="icon-image">📁</div>
+            <div class="icon-label">الملفات</div>
+        </div>
+        <div class="icon" style="top: 222px; right: 22px;" onclick="alert('المتصفح قريباً!')">
+            <div class="icon-image">🌐</div>
+            <div class="icon-label">المتصفح</div>
+        </div>
+        <div class="icon" style="top: 322px; right: 22px;" onclick="showSettings()">
+            <div class="icon-image">⚙️</div>
+            <div class="icon-label">الإعدادات</div>
+        </div>
+
+        <!-- Settings Window -->
+        <div id="settings" class="window" style="top: 100px; left: 200px; width: 600px; height: 500px;">
+            <div class="title-bar">
+                <span>الإعدادات - Azaam OS 10</span>
+                <div class="title-bar-buttons">
+                    <button onclick="closeWindow('settings')">✕</button>
+                </div>
+            </div>
+            <div class="window-content">
+                <h2 style="color: #0078d4; margin-bottom: 20px;">إعدادات النظام</h2>
+                <div style="padding: 15px; background: #f5f5f5; border-radius: 8px; margin-bottom: 15px;">
+                    <h3 style="margin-bottom: 10px;">🖥️ النظام</h3>
+                    <p style="color: #666;">Azaam OS 10 Pro - Build 22H2.1000</p>
+                </div>
+                <div style="padding: 15px; background: #f5f5f5; border-radius: 8px; margin-bottom: 15px;">
+                    <h3 style="margin-bottom: 10px;">👤 الحساب</h3>
+                    <p style="color: #666;">المستخدم: <strong id="user-name">مستخدم</strong></p>
+                </div>
+                <div style="padding: 15px; background: #f5f5f5; border-radius: 8px;">
+                    <h3 style="margin-bottom: 10px;">ℹ️ معلومات</h3>
+                    <p style="color: #666; line-height: 1.6;">
+                        نظام تشغيل كامل مصمم بالكامل<br>
+                        يعمل على جميع الأجهزة<br>
+                        © 2025 Azaam Corporation
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Taskbar -->
+    <div id="taskbar">
+        <div class="taskbar-left">
+            <div class="start-button" onclick="toggleStart()">
+                <div class="start-button-logo">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+            <div class="taskbar-icon" onclick="alert('المتصفح قريباً!')">🌐</div>
+            <div class="taskbar-icon" onclick="alert('الملفات قريباً!')">📁</div>
+            <div class="taskbar-icon" onclick="alert('المفكرة قريباً!')">📝</div>
+        </div>
+        <div id="clock"></div>
+    </div>
+
+    <!-- Start Menu -->
+    <div id="start-menu">
+        <div class="start-user">
+            <div class="start-user-avatar">👤</div>
+            <div class="start-user-name" id="start-user">مستخدم</div>
+        </div>
+        
+        <div class="start-apps">
+            <h4>التطبيقات</h4>
+            <div class="apps-list">
+                <div class="app-item" onclick="alert('المتصفح قريباً!')">
+                    <div class="app-item-icon">🌐</div>
+                    <div class="app-item-label">المتصفح</div>
+                </div>
+                <div class="app-item" onclick="alert('الملفات قريباً!')">
+                    <div class="app-item-icon">📁</div>
+                    <div class="app-item-label">الملفات</div>
+                </div>
+                <div class="app-item" onclick="alert('المفكرة قريباً!')">
+                    <div class="app-item-icon">📝</div>
+                    <div class="app-item-label">المفكرة</div>
+                </div>
+                <div class="app-item" onclick="showSettings(); toggleStart()">
+                    <div class="app-item-icon">⚙️</div>
+                    <div class="app-item-label">الإعدادات</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="start-footer">
+            <div class="power-btn" onclick="restart()">🔄</div>
+            <div class="power-btn" onclick="shutdown()">⏻</div>
+        </div>
+    </div>
+
+    <script>
+        let username = 'مستخدم';
+
+        // Boot
+        setTimeout(() => {
+            document.getElementById('boot-screen').classList.remove('active');
+            const saved = localStorage.getItem('azaam_user');
+            if (saved) {
+                username = saved;
+                showDesktop();
+            } else {
+                document.getElementById('setup-language').classList.add('active');
+            }
+        }, 3000);
+
+        function selectOption(el) {
+            el.parentElement.querySelectorAll('.setup-option').forEach(o => o.classList.remove('selected'));
+            el.classList.add('selected');
         }
 
-        .paint-toolbar {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 14px;
-            padding: 10px;
-            background: #f5f5f5;
-            border-bottom: 1px solid #e0e0e0;
-            flex-wrap: wrap;
+        function nextStep(step) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(step).classList.add('active');
         }
 
-        .color-btn {
-            width: 32px;
-            height: 32px;
-            border: 2px solid #ccc;
-            cursor: pointer;
-            transition: all 0.2s;
+        document.getElementById('use-password').addEventListener('change', function() {
+            document.getElementById('password').style.display = this.checked ? 'block' : 'none';
+        });
+
+        function finishSetup() {
+            const name = document.getElementById('username').value.trim();
+            if (!name) {
+                alert('أدخل اسمك!');
+                return;
+            }
+            username = name;
+            localStorage.setItem('azaam_user', username);
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            showDesktop();
         }
 
-        .color-btn.active {
-            border-color: #0078d4;
-            box-shadow: 0 0 8px rgba(0,120,212,0.5);
+        function showDesktop() {
+            document.getElementById('desktop').classList.add('active');
+            document.getElementById('user-name').textContent = username;
+            document.getElementById('start-user').textContent = username;
+            updateClock();
+            setInterval(updateClock, 1000);
         }
 
-        .color-btn:active {
-            transform: scale(0.9);
+        function updateClock() {
+            const now = new Date();
+            const time = now.toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' });
+            const date = now.toLocaleDateString('ar-SA', { day: 'numeric', month: 'numeric' });
+            document.getElementById('clock').innerHTML = `<div>${time}</div><div style="font-size:10px;">${date}</div>`;
         }
 
-        .tool-btn {
-            padding: 8px 14px;
-            border: 1px solid #ccc;
-            background: white;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 13px;
+        function toggleStart() {
+            document.getElementById('start-menu').classList.toggle('active');
         }
 
-        .tool-btn:hover {
-            background: #f5f5f5;
+        function showSettings() {
+            document.getElementById('settings').classList.add('active');
         }
 
-        .tool-btn:active {
-            transform: scale(0.96);
+        function closeWindow(id) {
+            document.getElementById(id).classList.remove('active');
         }
 
-        .calc-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1px;
-            background: #e0e0e0;
-            margin-top: 14px;
+        function restart() {
+            if (confirm('إعادة تشغيل؟')) {
+                location.reload();
+            }
         }
 
-        .calc-button {
-            padding: 22px;
-            font-size: 17px;
-            border: none;
-            background: #f5f5f5;
-            cursor: pointer;
-            font-weight: 400;
-            transition: all 0.2s;
+        function shutdown() {
+            if (confirm('إيقاف التشغيل؟')) {
+                document.body.innerHTML = '<div style="background:#000;width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;color:white;font-size:24px;">تم إيقاف التشغيل</div>';
+            }
         }
 
-        .calc-button:hover {
-            background: #e8e8e8;
-        }
-
-        .calc-button:active {
-            transform: scale(0.96);
-        }
-
-        .calc-button.operator {
-            background: #e0e0e0;
-        }
-
-        .calc-display {
-            width: 100%;
-            padding: 20px;
-            font-size: 32px;
-            text-align: right;
-            border: none;
-            margin-bottom: 14px;
-            background: white;
-            font-weight: 300;
-        }
-
-        .file-list {
-            list-style: none;
-        }
-
-        .file-item {
-            padding: 12px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            transition: all 0.2s;
-            font-size: 14px;
-            border-radius: 4px;
-        }
-
-        .file-item:hover {
-            background: #f0f0f0;
-        }
-
-        .file-item:active {
-            transform: scale(0.99);
-        }
-
-        .file-toolbar {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 16px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid #e0e0e0;
-        }
-
-        .game-board {
-            display: grid;
-            grid-template-columns: repeat(10, 34px);
-            gap: 1px;
-            margin: 18px auto;
-            width: fit-content;
-            background: #999;
-        }
-
-        .cell {
-            width: 34px;
-            height: 34px;
-            background: #ddd;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            transition: all 0.2s;
-            user-select: none;
-            font-size: 14px;
-        }
-
-        .cell:hover:not(.revealed) {
-            background: #ccc;
-        }
-
-        .cell:active:not(.revealed) {
-            transform: scale(0.96);
-        }
-
-        .cell.revealed {
-            background: #f5f5f5;
-            cursor: default;
-        }
-
-        .cell.mine {
-            background: #e81123;
-            color: white;
-        }
-
-        .cell.flagged {
-            background: #ffc107;
-        }
-
-        .browser-bar {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 0;
-            padding: 10px 12px;
-            background: #f5f5f5;
-            border-bottom: 1px solid #e0e0e0;
-            align-items: center;
-        }
-
-        .browser-btn {
-            width: 32px;
-            height: 32px;
-            border: 1px solid #ccc;
-            background: white;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            transition: all 0.2s;
-        }
-
-        .browser-btn:hover {
-            background: #f0f0f0;
-        }
-
-        .browser-btn:active {
-            transform: scale(0.92);
-        }
-
-        .browser-url {
-            flex: 1;
-            padding: 8px 14px;
-            border: 1px solid #ccc;
-            background: white;
-            font-size: 14px;
-        }
-
-        .browser-url:focus {
-            outline: none;
-            border-color: #0078d4;
-        }
-
-        .browser-home-card {
-            padding: 24px;
-            background: #f5f5f5;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .browser-home-card:hover {
-            background: #e8e8e8;
-            transform: translateY(-2px);
-        }
-
-        .browser-home-card:active {
-            transform: scale(0.98);
-        }
-
-        .modal {
-            position:
+        // Close start menu when clicking outside
+        document.addEventListener('click', (e) => {
+            const menu = document.getElementById('start-menu');
+            if (!menu.contains(e.target) && !e.target.closest('.start-button')) {
+                menu.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+                         </html>
